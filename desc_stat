@@ -1,0 +1,70 @@
+"""
+original file dates range from 1/22/20 to 3/21/20
+descriptive stat on global daily total confirmed vs US
+"""
+import pandas as pd
+import numpy as np
+
+file = pd.read_csv("Today_Covid_Confirmed.csv")
+df = pd.DataFrame(file)
+
+#extract only the dates from 2/1/2020 for enough number of cases reported
+datesDrop = df.iloc[:,1:11] 
+alldf = df.drop(datesDrop, axis=1)
+
+us = alldf[alldf['Country'] == 'US']
+allothers = alldf[alldf['Country'] != 'US']
+
+if 'US' in allothers['Country']:
+    print('error')
+else:
+    print('good to go')
+    
+
+#given some parameters along with a dataframe, return a new one that includes stats
+#new stat df
+from numpy import percentile
+
+def new_df(df_, idx=index):
+    '''
+    create sum, mean, median, q1, q3 variables for each data
+    create a dictionary: insert column names as key, stats as values
+    index as dates
+    return new df
+    '''
+    bydate = df_.iloc[:,1:]
+    df_dict = {}
+    
+    sum_ = bydate.sum()
+    df_dict['Total'] = list(sum_)
+    
+    length = len(bydate)
+    mean = []
+    for i in sum_:
+        avg = i/length
+        avg = float("%.4f"%avg)
+        mean.append(avg)
+    df_dict['Mean'] = mean 
+    
+    median = []
+    q1 = []
+    q3 = []
+    for columns in bydate:
+        colvals = bydate[columns].values
+        q1_, med, q3_ = percentile(colvals, [25, 50, 75])
+        median.append(med)
+        q1.append(q1_)
+        q3.append(q3_)
+    
+    df_dict['Median'] = median
+    df_dict['Q_1'] = q1
+    df_dict['Q_3'] = q3
+    
+
+    df_new = pd.DataFrame(data=df_dict, index=idx)
+    return df_new
+
+index = pd.date_range('2/1/20', periods=50)
+usdf = new_df(us, idx=index)
+alldf = new_df(allothers)
+usdf
