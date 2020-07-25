@@ -10,4 +10,9 @@
   *  R-squared values to compare which model should be used
   * Timeseries train/test split for model evaluation
 
-Updated on July 23, 2020 4:22pm
+
+## Updates:
+
+July 23, 2020: Archive old files and update new workload; started EDA
+July 24, 2020: Updated workload on cleaning data and pre-aggregation (process: ts diff > mean agg > outliers > classify)
+
