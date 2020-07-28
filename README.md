@@ -13,6 +13,7 @@
 
 ## Updates:
 
-* July 25, 2020: Fixed bugs, data transfer errors, and prepped for data analysis 
+* July 26, 2020: Organizing code and fixing bugs; worked up to filtering process
+* July 25, 2020: Fixed bugs, data transfer errors, and prepped for data analysis
 * July 24, 2020: Updated workload on cleaning data and pre-aggregation (process: ts diff > mean agg > outliers > classify)
 * July 23, 2020: Archive old files and update new workload; started EDA
