@@ -13,6 +13,8 @@
 
 ## Updates:
 
+* July 28, 2020: Separated and cleaned up data pre-processing & analysis part of the work. Planned to assess log linreg rather than multi-linreg.
+* July 27, 2020: Completed up to evaluation of linear regression models
 * July 26, 2020: Organizing code and fixing bugs; worked up to filtering process
 * July 25, 2020: Fixed bugs, data transfer errors, and prepped for data analysis
 * July 24, 2020: Updated workload on cleaning data and pre-aggregation (process: ts diff > mean agg > outliers > classify)
