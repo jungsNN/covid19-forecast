@@ -13,6 +13,7 @@
 
 ## Updates:
 
+* ~Aug 06, 2020: Worked on scaling methods and model evaluation. Figuring out how to deal with 56 states' dataset for each of 100 total date data, in order to produce the result I was visioning.
 * July 28, 2020: Separated and cleaned up data pre-processing & analysis part of the work. Planned to assess log linreg rather than multi-linreg.
 * July 27, 2020: Completed up to evaluation of linear regression models
 * July 26, 2020: Organizing code and fixing bugs; worked up to filtering process
