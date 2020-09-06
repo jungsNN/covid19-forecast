@@ -1,18 +1,18 @@
 # COVID-19 Weekly Forecast in US
 
 ## Basic project description:
-  Purpose is to obtain daily updated data on US Covid-19 numbers, which will be processed along with data from previous dates. The model yields prediction on next 7 days on whether a US state has a potential to be in a risk of having a high "incident rate" or not.
+  Purpose is to classify "in risk" or "not in risk" for the following week on new cases for each state. Utilize previous model forecasts to train a new neural network and thus obtain higher prediction accuracy.
 
   Statistical Analysis/Methods:
   * EDA on which feature values and target value are appropriate
-  * Assessed using possible feature variables - 'Confirmed', 'Active', 'Deaths', 'People_Tested', and 'Testing_Rate' (based on Johns Hopkins CSSE data).
-  * Multiple Linear Regression model to obtain coefficients, and thus distinguish data points which are significantly off from the mean values
-  *  R-squared values to compare which model should be used
-  * Timeseries train/test split for model evaluation
+  * Using previous CDC weekly case forecasts, aggregate all model predictions and measure errors
+  * Use gradients to update weights on training
+  * & more
 
 
 ## Updates:
 
+* ~Sep 06, 2020: Updated new training methods and data: use previous forecasts to train for higher accuracy
 * ~Aug 06, 2020: Worked on scaling methods and model evaluation. Figuring out how to deal with 56 states' dataset for each of 100 total date data, in order to produce the result I was visioning.
 * July 28, 2020: Separated and cleaned up data pre-processing & analysis part of the work. Planned to assess log linreg rather than multi-linreg.
 * July 27, 2020: Completed up to evaluation of linear regression models
