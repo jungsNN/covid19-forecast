@@ -12,6 +12,7 @@
 
 ## Updates:
 
+* ~Sep 12, 2020: Uploaded recent workload on building multi-layer perceptron network
 * ~Sep 06, 2020: Updated new training methods and data: use previous forecasts to train for higher accuracy
 * ~Aug 06, 2020: Worked on scaling methods and model evaluation. Figuring out how to deal with 56 states' dataset for each of 100 total date data, in order to produce the result I was visioning.
 * July 28, 2020: Separated and cleaned up data pre-processing & analysis part of the work. Planned to assess log linreg rather than multi-linreg.
