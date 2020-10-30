@@ -36,6 +36,7 @@
 <hr>
 ## Updates:
 
+* Oct 30, 2020: Added a bit more thorough EDA section prior to building a neural network; started building a neural network (details TBA)
 * Oct 26, 2020: Updated EDA and completed up to splitting into train, val, test dataloaders for training. Need to fix fetching datasets via requests to sources. Updated python "helper" module, `co_helper`, which includes python functions.
 * ~Sep 12, 2020: Uploaded recent workload on building multi-layer perceptron network
 * ~Sep 06, 2020: Updated new training methods and data: use previous forecasts to train for higher accuracy
