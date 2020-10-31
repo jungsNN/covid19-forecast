@@ -21,7 +21,6 @@
   * Train/test split
   * Building a Recurrent Neural Network architecture with LSTM using Pytorch
 
-<hr></hr>
 ## References
 
 * [COVID-19 United States Reopen and Shut Down Status by State](https://github.com/rearc-data/nyt-states-reopen-status-covid-19)
@@ -32,7 +31,6 @@
   - Extracted most of project's feature variables from the source
   - More than 60,000 records used for training
 
-<hr></hr>
 ## Updates:
 
 * Oct 30, 2020: Added a bit more thorough EDA section prior to building a neural network; started building a neural network (details TBA)
