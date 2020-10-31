@@ -1,7 +1,7 @@
 # COVID-19 Weekly Forecast in US
 
-<hr>
-# Basic project description:
+<hr></hr>
+## Basic project description:
   Purpose is to classify and predict whether a state will be at status, `reopened`, `in risk` or `closed` the following days (7 day prediction). `COVID-19 United States Reopen and Shut Down Status by State` by rearc and `Coronavirus (Covid-19) Data Hub` by Tableau.
 
   __Dataset:__
@@ -22,7 +22,7 @@
   * Train/test split
   * Building a Recurrent Neural Network architecture with LSTM using Pytorch
 
-<hr>
+<hr></hr>
 ## References
 
 * [COVID-19 United States Reopen and Shut Down Status by State](https://github.com/rearc-data/nyt-states-reopen-status-covid-19)
@@ -33,7 +33,7 @@
   - Extracted most of project's feature variables from the source
   - More than 60,000 records used for training
 
-<hr>
+<hr></hr>
 ## Updates:
 
 * Oct 30, 2020: Added a bit more thorough EDA section prior to building a neural network; started building a neural network (details TBA)
