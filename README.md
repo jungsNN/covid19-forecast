@@ -1,7 +1,7 @@
 # COVID-19 Weekly Forecast in US
 
 <hr>
-### Basic project description:
+# Basic project description:
   Purpose is to classify and predict whether a state will be at status, `reopened`, `in risk` or `closed` the following days (7 day prediction). `COVID-19 United States Reopen and Shut Down Status by State` by rearc and `Coronavirus (Covid-19) Data Hub` by Tableau.
 
   __Dataset:__
