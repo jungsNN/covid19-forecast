@@ -1,5 +1,7 @@
 # COVID-19 Weekly Forecast in US
 
+Repo under (heavy)maintenance, therefore disregard any data & workload up on this repo. More info under `Updates`.
+
 ## Basic project description
   Purpose is to classify and predict whether a state will be at status, `reopened`, `in risk` or `closed` the following days (7 day prediction). `COVID-19 United States Reopen and Shut Down Status by State` by rearc and `Coronavirus (Covid-19) Data Hub` by Tableau.
 
@@ -32,7 +34,7 @@
   - More than 60,000 records used for training
 
 ## Updates
-
+* ~Nov 29, 2020: Deploying models via Flask + Heroku and updating website. Coming soon!
 * Oct 30, 2020: Added a bit more thorough EDA section prior to building a neural network; started building a neural network (details TBA)
 * Oct 26, 2020: Updated EDA and completed up to splitting into train, val, test dataloaders for training. Need to fix fetching datasets via requests to sources. Updated python "helper" module, `co_helper`, which includes python functions.
 * ~Sep 12, 2020: Uploaded recent workload on building multi-layer perceptron network
