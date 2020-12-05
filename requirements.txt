@@ -1,0 +1,17 @@
+click
+Flask
+gunicorn
+setuptools
+itsdangerous
+Jinja2
+MarkupSafe
+Werkzeug
+pandas
+numpy
+pip
+python-dateutil
+pytz
+six
+setuptools
+torch
+boto3
