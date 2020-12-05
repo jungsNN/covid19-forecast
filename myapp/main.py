@@ -24,13 +24,7 @@ app.config['RESOURCE_FOLDER'] = RESOURCE_FOLDER
 # A welcome message to test our server
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
-        if request.form.get('projectButton') == "Forecast":
-            return redirect(url_for("forecast"))
-        elif request.form.get('projectButton') == "Human-Dog":
-            return redirect(url_for("human_dog"))
-    else:
-        return render_template("home.html")
+    return render_template("../index.html")
 
 # ----- Functions for COVID-19 Forecast App ----- #
 def query_state(fips, forecast_filepath):
@@ -46,7 +40,7 @@ def query_state(fips, forecast_filepath):
 
     return data
 
-@app.route('/forecast', methods=['POST', 'GET'])
+@app.route('/', methods=['POST', 'GET'])
 def forecast():
     next_week = datetime.date.today() + datetime.timedelta(7)
     next_week = next_week.strftime("%Y-%m-%d")
