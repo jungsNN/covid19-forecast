@@ -79,29 +79,7 @@
     .description {
         color: black;
     }
-    /*  FORECAST APP BUTTONS  */
-    .fipsButton {
-        box-shadow: 0px 1px 0px 0px #1c1b18;
-        background-color:#ffffff;
-        border-radius:10px;
-        border:2px solid #333029;
-        display:inline-block;
-        cursor:pointer;
-        color:#505739;
-        font-family:Monospace;
-        font-size:14px;
-        font-weight:bold;
-        padding:8px 10px;
-        text-decoration:none;
-        text-shadow:0px 1px 0px #ffffff;
-    }
-    .fipsButton:hover {
-        background-color:#ffffff;
-    }
-    .fipsButton:active {
-        position:relative;
-        top:1px;
-    }
+
     </style>
 </head>
     <!--- NAVBAR HTML --->
@@ -110,7 +88,7 @@
       <div class="container">
         <ul class="nav navbar-nav">
           <li class="active">
-            <a href="/" role="button"> <img src=""/>
+            <a href="/" role="button"> <img src="https://www.jiae.ai"/>
             </a>
           </li>
           <li class="dropdown">
@@ -127,150 +105,72 @@
         </div>
     </nav>
 <!--- END OF NAVBAR --->
-    <!--- COVID19-FORECAST APP BUTTIONS --->
-    <form action='/' method="post">
-        <div class="container">
-            <h2 class="flex center">Choose a State</h2><br>
-                <button class="fipsButton" type="submit" name="fips" value="1">AL</button>
-                <button class="fipsButton" type="submit" name="fips" value="2">AK</button>
-                <button class="fipsButton" type="submit" name="fips" value="4"/>AZ</button>
-                <button class="fipsButton" type="submit" name="fips" value="5"/>AR</button>
-                <button class="fipsButton" type="submit" name="fips" value="6"/>CA</button>
-                <button class="fipsButton" type="submit" name="fips" value="8"/>CO</button>
-                <button class="fipsButton" type="submit" name="fips" value="9"/>CT</button>
-                <button class="fipsButton" type="submit" name="fips" value="10"/>DE</button>
-                <button class="fipsButton" type="submit" name="fips" value="11"/>DC</button>
-                <button class="fipsButton" type="submit" name="fips" value="12"/>FL</button>
-                <button class="fipsButton" type="submit" name="fips" value="13"/>GA</button>
-                <button class="fipsButton" type="submit" name="fips" value="15"/>HI</button>
-                <button class="fipsButton" type="submit" name="fips" value="16"/>ID</button>
-                <button class="fipsButton" type="submit" name="fips" value="17"/>IL</button>
-                <button class="fipsButton" type="submit" name="fips" value="18"/>IN</button>
-                <button class="fipsButton" type="submit" name="fips" value="19"/>IA</button>
-                <button class="fipsButton" type="submit" name="fips" value="20"/>KS</button>
-                <button class="fipsButton" type="submit" name="fips" value="21"/>KY</button>
-                <button class="fipsButton" type="submit" name="fips" value="22"/>LA</button>
-                <button class="fipsButton" type="submit" name="fips" value="23"/>ME</button>
-                <button class="fipsButton" type="submit" name="fips" value="24"/>MD</button>
-                <button class="fipsButton" type="submit" name="fips" value="25"/>MA</button>
-                <button class="fipsButton" type="submit" name="fips" value="26"/>MI</button>
-                <button class="fipsButton" type="submit" name="fips" value="27"/>MN</button>
-                <button class="fipsButton" type="submit" name="fips" value="28"/>MS</button>
-                <button class="fipsButton" type="submit" name="fips" value="29"/>MO</button>
-                <button class="fipsButton" type="submit" name="fips" value="30"/>MT</button>
-                <button class="fipsButton" type="submit" name="fips" value="31"/>NE</button>
-                <button class="fipsButton" type="submit" name="fips" value="32"/>NV</button>
-                <button class="fipsButton" type="submit" name="fips" value="33"/>NH</button>
-                <button class="fipsButton" type="submit" name="fips" value="34"/>NJ</button>
-                <button class="fipsButton" type="submit" name="fips" value="35"/>NM</button>
-                <button class="fipsButton" type="submit" name="fips" value="36"/>NY</button>
-                <button class="fipsButton" type="submit" name="fips" value="37"/>NC</button>
-                <button class="fipsButton" type="submit" name="fips" value="38"/>ND</button>
-                <button class="fipsButton" type="submit" name="fips" value="39"/>OH</button>
-                <button class="fipsButton" type="submit" name="fips" value="40"/>OK</button>
-                <button class="fipsButton" type="submit" name="fips" value="41"/>OR</button>
-                <button class="fipsButton" type="submit" name="fips" value="42"/>PA</button>
-                <button class="fipsButton" type="submit" name="fips" value="44"/>RI</button>
-                <button class="fipsButton" type="submit" name="fips" value="45"/>SC</button>
-                <button class="fipsButton" type="submit" name="fips" value="46"/>SD</button>
-                <button class="fipsButton" type="submit" name="fips" value="47"/>TN</button>
-                <button class="fipsButton" type="submit" name="fips" value="48"/>TX</button>
-                <button class="fipsButton" type="submit" name="fips" value="49"/>UT</button>
-                <button class="fipsButton" type="submit" name="fips" value="50"/>VT</button>
-                <button class="fipsButton" type="submit" name="fips" value="51"/>VA</button>
-                <button class="fipsButton" type="submit" name="fips" value="53"/>WA</button>
-                <button class="fipsButton" type="submit" name="fips" value="54"/>WV</button>
-                <button class="fipsButton" type="submit" name="fips" value="55"/>WI</button>
-                <button class="fipsButton" type="submit" name="fips" value="56"/>WY</button>
-        </div>
-        <hr>
-    </form>
-    <h3 class="text-center">Forecasting the week of {{ week }}</h3>
-    <!-- END OF BUTTIONS -->
-        <!-- RESULTS -->
-        <div class="flex center"><br><br>
-
-        <ul style="list-style-type:none;">
-        <li ><p class='text-left' style="font-size:25px;" > State: {{ state }}</p>
-        <li><p class='text-left' style="font-size:25px;" > Fips: {{ fips }}</p>
-        <li><p class='text-left' style="font-size:25px;" > Cases: {{ cases }}</p>
-        <li><p class='text-left' style="font-size:25px;" > Deaths: {{ deaths }}</p>
-        <li><p class='text-left' style="font-size:25px;" > Total open: {{ total_open }}</p>
-        <li><p class='text-left' style="font-size:25px;" > Status: {{ status }}</p>
-        </ul>
-
-        </div>
-        <hr>
-        <div class="container">
-
-
-        <h3 class="text-center">
-        Data and Results Explained
-        </h3><br>
-        <div><!-- DATA SOURCES -->
-        <h4 class="text-left">Data Sources</h4>
-        <ul >
-        <li><h5>New York Times Coronavirus (Covid-19) Data in the United States</h5>
-            <ul style="list-style-type:none;">
-                <li>
-                    <p class="text-left" style="font-size: 13px">State by state daily updates on confirmed, as well as "probable" cases and deaths. The numbers represent accumulated records of `cases` and `deaths`, which include all those who recovered and passed.</p>
-                </li>
-            </ul>
-        </li>
-        <li><h5>COVID-19 United States Reopen and Shut Down Status by State | NY Times</h5>
-            <ul style="list-style-type:none;">
-                <li>
-                    <p class="text-left" style="font-size: 13px">provided by: Rearc (AWS Data Exchange)</p>
-                </li>
-                <li>
-                    <p class="text-left" style="font-size: 13px">Daily revision on various categories detailing on closures and reopening status in each state.</p>
-                </li>
-            </ul>
-        </li>
-        </ul>
-        <br><!-- FORECAST DESCRIPTION -->
-        <h4 class="text-left">Forecast Description</h4>
-        <ul>
-        <li>
-            <p class="text-left" ><span style="font-size: 14px; font-weight: bold" class="note">Cases:</span><span style='font-size: 13px;'>Predicted total cases for next week in each state</span></p>
-        </li>
-        <li>
-            <p class="text-left" ><span style="font-size: 14px; font-weight: bold" class="note">Deaths:</span><span style='font-size: 13px;'>Predicted total deaths for next week in each state</span></p>
-        </li>
-        <li>
-            <p class="text-left"><span style="font-size: 14px; font-weight: bold" class="note">Total Open:</span><span style='font-size: 13px;'>Predicted number of public settings open for business (i.e. Barbar shop, gym, nail salon, bar, etc.). Each value represents a single entity/business category.</span></p>
-        </li>
-        <li>
-            <p class="text-left" ><span style="font-size: 14px; font-weight: bold" class="note">Status:</span><span style='font-size: 13px;'>Risk rating ranging from `1` (Low risk: "gyms open", "traveling to work", etc.) to `3` (high risk: "state on shut-down", "stay home", "QT-Time").</span></p>
-        </li>
-
-        </ul>
-        <br>
-        <h4 class="text-left">ForecastNet Model</h4>
-        <ul style="list-style-type:none;">
-        <li>
-            <p class="text-left" style="font-size: 13px">
-                ForecastNet, made from scratch using Pytorch (due to infeasibility of Tensorflow on Heroku), is a simple multi-perceptron with three fully connected layers, one dropout(p=0.3) layer and a `BatchNorm1d` layer. The fully connected dense layers are 256, 512 and 6(output size) dimensions, respectively. Below is a demonstration of the network:
-            </p><br>
-        </li>
-        <li>
-            <p class="text-center" style="font-weight: bold; font-size:15px;">
-                [INPUT BATCH]
-            </p>
-
-            <p class="text-center" style="font-weight: bold; font-size:15px;">
-
-            </p>
-
-        </li>
-        </ul>
-        </div>
-        </div>
-
-
-        </p>
-        </body>
-
-        </div>
-
-        </html>
+<div class="jumbotron text-center">
+  <div class="container">
+    <a href="/" class="lang-logo">
+      <img src="{% static 'lang-logo.png'%}">
+    </a>
+    <h2>COVID-19 US Weekly Forecast</h2>
+    <p>Project Description</p>
+    <a type="button" class="btn btn-lg btn-default" href="https://forecast-webapp.herokuapp.com"><span class="glyphicon glyphicon-flash"></span> COVID19 Forecast App </a>
+    <a type="button" class="btn btn-lg btn-primary" href="https://github.com/jungsnn/covid19-weekly"><span class="glyphicon glyphicon-download"></span> Source on GitHub</a>
+  </div>
+</div>
+<div class="container">
+  <hr>
+  <!-- COLUMN DIVIDE -->
+  <div class="row">
+    <div class="col-md-6">
+        <!-- FORECAST DESCRIPTION -->
+      <h3><span class="glyphicon glyphicon-info-sign"></span> Forecast Results Explained </h3>
+      <ul>
+          <li>
+              <p class="text-left" ><span style="font-size: 14px; font-weight: bold" class="note">Cases:</span><span style='font-size: 13px;'>Predicted total cases for next week in each state</span></p>
+          </li>
+          <li>
+              <p class="text-left" ><span style="font-size: 14px; font-weight: bold" class="note">Deaths:</span><span style='font-size: 13px;'>Predicted total deaths for next week in each state</span></p>
+          </li>
+          <li>
+              <p class="text-left"><span style="font-size: 14px; font-weight: bold" class="note">Total Open:</span><span style='font-size: 13px;'>Predicted number of public settings open for business (i.e. Barbar shop, gym, nail salon, bar, etc.). Each value represents a single entity/business category.</span></p>
+          </li>
+          <li>
+              <p class="text-left" ><span style="font-size: 14px; font-weight: bold" class="note">Status:</span><span style='font-size: 13px;'>Risk rating ranging from `1` (Low risk: "gyms open", "traveling to work", etc.) to `3` (high risk: "state on shut-down", "stay home", "QT-Time").</span></p>
+          </li>
+      </ul>
+      <!-- SOURCE REFERENCE -->
+    </div>
+    <div class="col-md-6">
+      <h3><span class="glyphicon glyphicon-link"></span> SOURCE REFERENCES </h3>
+      <ul >
+          <li><h5>New York Times Coronavirus (Covid-19) Data in the United States</h5>
+              <ul style="list-style-type:none;">
+                  <li>
+                      <p class="text-left" style="font-size: 13px">State by state daily updates on confirmed, as well as "probable" cases and deaths. The numbers represent accumulated records of `cases` and `deaths`, which include all those who recovered and passed.</p>
+                  </li>
+              </ul>
+          </li>
+          <li><h5>COVID-19 United States Reopen and Shut Down Status by State | NY Times</h5>
+              <ul style="list-style-type:none;">
+                  <li>
+                      <p class="text-left" style="font-size: 13px">provided by: Rearc (AWS Data Exchange)</p>
+                  </li>
+                  <li>
+                      <p class="text-left" style="font-size: 13px">Daily revision on various categories detailing on closures and reopening status in each state.</p>
+                  </li>
+              </ul>
+          </li>
+      </ul>
+      <h3><span class="glyphicon glyphicon-link"></span> Helpful Links</h3>
+      <ul>
+        <li><a href="https://www.heroku.com/home">Heroku</a></li>
+        <li><a href="https://devcenter.heroku.com/">Heroku Dev Center</a></li>
+        <li><a href="https://devcenter.heroku.com/articles/getting-started-with-python">Getting Started with Python on Heroku</a></li>
+        <li><a href="https://devcenter.heroku.com/articles/django-app-configuration">Configuring Django Apps for Heroku</a></li>
+      </ul>
+    </div>
+  </div> <!-- row -->
+   <div class="alert alert-info text-center" role="alert">
+    Please do work through the Getting Started guide, even if you do know how to build such an application.  The guide covers the basics of working with Heroku, and will familiarize you with all the concepts you need in order to build and deploy your own apps.
+  </div>
+</div>
+</html>
