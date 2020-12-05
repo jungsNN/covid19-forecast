@@ -5,9 +5,9 @@ import boto3
 import datetime
 import os
 import torch
-from .static.resources.forecast.serve import forecastnet
+from .static.serve import forecastnet
 
-
+REMOVE_DIR = 'forecast/static/serve/'
 SERVE_DIR = 'forecast/static/serve'
 PUBLIC_BUCKET_NAME = 'nyt-reopen-dx-datas3bucket-1gc7v1ltd3dtf'
 PUBLIC_PREFIX = 'nyt-states-reopen-status-covid-19/dataset/nyt-states-reopen-status-covid-19.csv'
@@ -89,9 +89,9 @@ def preprocess_y(data):
         embed[i][status[i] - 1] = 1
 
     extracted = extract_cols(y, 'opened')
-    extracted = np.sum(count_string_values(extracted), axis=1)
+    y['total_open'] = np.sum(count_string_values(extracted), axis=1)
     y = np.concatenate([normalize(y[['population']]).values,
-                        normalize(pd.DataFrame(extracted)).values,
+                        normalize(y[['total_open']]).values,
                         embed], axis=1)
     return y
 
@@ -133,9 +133,7 @@ def serialize_forecast(raw_outputs):
         inversed = serialized[:, mx] * max_vals[mx]
         serialized[:, mx] = [int(round(x)) for x in inversed]
     serialized = pd.concat([pd.DataFrame(serialized), pd.DataFrame(status)], axis=1)
-    for npfile in os.listdir(SERVE_DIR):
-        if npfile.endswith('.npy'):
-            os.remove(os.path.join(SERVE_DIR, npfile))
+    
     return serialized.reset_index(drop=True)
 
 
@@ -150,11 +148,9 @@ def save_forecast(data):
 
 
 def run_app():
-    nyt_reopen_filename = 'nyt_reopen_{}'.format( datetime.date.today().strftime("%Y%m%d"))
+    nyt_reopen_filepath = os.path.join(SERVE_DIR, 'nyt_reopen_{}'.format( datetime.date.today().strftime("%Y%m%d")))
     s3 = boto3.resource('s3')
-    s3.Bucket(PUBLIC_BUCKET_NAME).download_file(PUBLIC_PREFIX, nyt_reopen_filename)
-    reopen_data = pd.read_csv(os.path.join(SERVE_DIR, nyt_reopen_filename))
+    s3.Bucket(PUBLIC_BUCKET_NAME).download_file(PUBLIC_PREFIX, nyt_reopen_filepath)
+    reopen_data = pd.read_csv(nyt_reopen_filepath)
     inputs = get_inputs(RAW_URL, reopen_data)
     save_forecast(serialize_forecast(get_raw_forecast(inputs, MODEL)))
-    os.remove(os.path.join(SERVE_DIR, nyt_reopen_filename))
-
