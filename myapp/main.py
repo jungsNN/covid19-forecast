@@ -4,18 +4,23 @@ from flask import Flask, request, render_template, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 import pandas as pd
 from . import forecast_api
+#from flask_flatpages import FlatPages
+#from flask_frozen import Freezer
 
-''' -------------------- CONFIGURATION --------------------------- '''
+''' -------------------- APP CONFIG --------------------------- '''
 app = Flask(__name__)
 app.secret_key = "SECRET_KEY"
 path = os.getcwd()
+
 UPLOAD_FOLDER = os.path.join(path, 'myapp/static/uploads')
 RESOURCE_FOLDER = os.path.join(path, 'myapp/static/resources')
+
 if not os.path.isdir(UPLOAD_FOLDER):
     os.mkdir(UPLOAD_FOLDER)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['RESOURCE_FOLDER'] = RESOURCE_FOLDER
-''' -------------------- FLASK ROUTES --------------------------- '''
+
+''' -------------------- APP VIEWS --------------------------- '''
 # A welcome message to test our server
 @app.route('/', methods=['GET', 'POST'])
 def index():
