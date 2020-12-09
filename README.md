@@ -1,6 +1,12 @@
 # COVID-19 Weekly Forecast in US
 
-Repo under (heavy)maintenance, therefore disregard any data & workload up on this repo. More info under `Updates`.
+Forecast web app has finally been published online on my website.
+Please visit to try it out:
+
+1. https://www.jiae.ai/home-page
+2. click `COVID-19 Forecast App` button.
+
+__Note__: Some pages are yet to be established, and therefore some buttons do not direct to corresponding pages.
 
 ## Basic project description
   Purpose is to classify and predict whether a state will be at status, `reopened`, `in risk` or `closed` the following days (7 day prediction). `COVID-19 United States Reopen and Shut Down Status by State` by rearc and `Coronavirus (Covid-19) Data Hub` by Tableau.
