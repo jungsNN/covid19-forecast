@@ -3,7 +3,7 @@
 Forecast web app has finally been published online on my website.
 Please visit to try it out:
 
-1. https://www.jiae.ai/home-page
+1. https://www.jiae.ai
 2. click `COVID-19 Forecast App` button.
 
 __Note__: Some pages are yet to be established, and therefore some buttons do not direct to corresponding pages.
