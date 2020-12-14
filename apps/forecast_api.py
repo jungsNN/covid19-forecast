@@ -1,3 +1,4 @@
+#!/home/jungsnn1029/.virtualenvs/myvirtualenv/bin/python
 import pandas as pd
 import csv
 import numpy as np
@@ -16,18 +17,17 @@ PUBLIC_BUCKET_NAME = 'sagemaker-us-east-1-476204846640'
 PUBLIC_PREFIX = 'nyt-states-reopen-status-covid-19/dataset/nyt-states-reopen-status-covid-19.csv'
 # New York Times Daily Github Raw Data
 RAW_URL = 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv'
-CSV = [f for f in os.listdir('mysite/train/') if f.endswith('.csv') and         f.startswith('forecast_')][0]
+CSV = [f for f in os.listdir('mysite/train/') if f.endswith('.csv') and f.startswith('forecast_')][0]
 LAST_DATA = pd.read_csv('mysite/train/'+CSV)
-# Status (target) mask
 STATUS_DICT = {1: ['reopened', 'forward', 'all'],
                2: ['reopening', 'pausing', 'regional', 'soon'],
                3: ['reversing', 'shutdown-restricted']}
-''' -------- MODEL CONFIG -------- '''
+''' -------- MODEL -------- '''
 IN_FEATURES = 58
 OUT_FEATURES = 6
 N_STEPS = 7
 N_LAYERS = 2
-HID_DIM = 1024
+HID_DIMS = [1024, 784]
 
 DEVICE = torch.device('cpu')
 
@@ -87,7 +87,7 @@ def preprocess_y(data):
         embed[i][status[i] - 1] = 1
 
     extracted = extract_cols(y, 'opened')
-    y['total_open'] = np.sum(count_string_values(extracted), axis=1)
+    y.loc[:, 'total_open'] = np.sum(count_string_values(extracted), axis=1)
     y[['status_1', 'status_2', 'status_3']] = pd.DataFrame(embed)
     y = pd.concat([y[['state']],
                     normalize(y[['population']]),
@@ -96,32 +96,20 @@ def preprocess_y(data):
     return y
 
 
-def get_inputs(date_from, reopen_data):
+def get_inputs(reopen_data):
     x = pd.read_csv(RAW_URL, error_bad_lines=False)
-    x = x.loc[x.date >= date_from]
-    if datetime.date.today() not in x.date:
+    past_week = sorted(x.date.unique())[-7:]
+    x = x.query("date in @past_week")
 
-        missing_date_rolling = (x.set_index(pd.to_datetime(x['date']))
-                                                            .groupby('state')[['cases', 'deaths']]
-                                                            .resample('6D')
-                                                            .mean()
-                                                            .reset_index()
-                                                            .drop('date', axis=1))
-        today = [datetime.date.today().strftime("%Y-%m-%d")] * len(missing_date_rolling)
-        missing_date_rolling = pd.concat([pd.DataFrame(today, columns=['date']), missing_date_rolling], axis=1)
-        x.append(missing_date_rolling)
-
-    input_data = preprocess_x(x).reset_index().merge(preprocess_y(reopen_data),
-                                                                how='left', on='state')
+    input_data = preprocess_x(x).reset_index().merge(preprocess_y(reopen_data), how='left', on='state')
     daily = []
     for date in sorted(input_data.date.unique()):
-        daily.append(input_data.loc[input_data.date == date].drop(['date', 'state'],
-                                                                    axis=1).reset_index(drop=True))
+        daily.append(input_data.loc[input_data.date == date].drop(['date', 'state'], axis=1).reset_index(drop=True))
 
     return pd.concat(daily, axis=1).values
 
 
-def get_raw_forecast(inputs, model): # PICK BACK UP FROM HERE: NEED TO MODIFY THE INPUT DATASETS
+def get_raw_forecast(inputs, model):
     """
     returns arrays
     """
@@ -143,6 +131,7 @@ def serialize_forecast(raw_outputs):
     """
     max values in the order of ['cases', 'deaths', 'total_open']
     """
+
     max_vals = [np.load(os.path.join(SERVE_DIR, 'max_cases.npy')),
                 np.load(os.path.join(SERVE_DIR, 'max_deaths.npy')),
                 np.load(os.path.join(SERVE_DIR, 'max_total_open.npy'))]
@@ -165,14 +154,13 @@ def save_forecast(data):
         csvwriter.writerow(['state', 'fips', 'cases', 'deaths', 'total_open', 'status'])
         csvwriter.writerows(rows)
 
-
 def save_today_data(y):
     # rearc NYT reopen data
     today_y = y.query("state in @LAST_DATA.state")
     today_status = today_y.iloc[:, -3:]
     today_opened = extract_cols(today_y, 'opened')
     today_y['total_open'] = np.sum(count_string_values(today_opened), axis=1)
-    today_y = today_y.sort_values(by='state')[['population', 'total_open', 'status']]
+    today_y = today_y.sort_values(by='state')[['total_open', 'status']]
 
    # raw daily data
     today_x = pd.read_csv(RAW_URL, error_bad_lines=False).query("state in @LAST_DATA.state")
@@ -180,31 +168,30 @@ def save_today_data(y):
     most_recent_date
     today_x = today_x.loc[today_x.date == most_recent_date]
 
-    # merged returns ['state', 'fips', 'cases', 'deaths', 'population', 'total_open', 'status'] actual today values
+    # merged returns ['state', 'fips', 'cases', 'deaths','total_open', 'status'] actual today values
     today_data = pd.concat([today_x.iloc[:, 1:].sort_values(by='state').reset_index(drop=True),
                             today_y.reset_index(drop=True)], axis=1)
 
     save_path = 'raw_daily_{}.csv'.format(datetime.date.today())
     with open(os.path.join(SERVE_DIR, save_path), 'w') as csvfile:
         csvwriter = csv.writer(csvfile)
-        csvwriter.writerow(['state', 'fips', 'cases', 'deaths', 'population', 'total_open', 'status'])
+        csvwriter.writerow(['state', 'fips', 'cases', 'deaths', 'total_open', 'status'])
         csvwriter.writerows(today_data.values)
-        
 
 def run_app():
-    nyt_reopen_filepath = os.path.join(SERVE_DIR, 'nyt_reopen_{}.csv'.format( datetime.date.today().strftime("%Y%m%d")))
 
+    nyt_reopen_filepath = os.path.join(SERVE_DIR, 'nyt_reopen_{}.csv'.format( datetime.date.today().strftime("%Y%m%d")))
     s3 = boto3.resource('s3', aws_access_key_id=config.SECRET_KEY,
                         aws_secret_access_key=config.ACCESS_KEY,
                         region_name='us-east-1')
     s3.Bucket(PUBLIC_BUCKET_NAME).download_file(PUBLIC_PREFIX, nyt_reopen_filepath)
-
-    date_from = today - datetime.timedelta(7)
-    week_inputs = get_inputs(date_from.strftime("%Y-%m-%d"), pd.read_csv(nyt_reopen_filepath))
+    week_inputs = get_inputs(pd.read_csv(nyt_reopen_filepath))
     reopen_data = pd.read_csv(nyt_reopen_filepath)
+    # SAVING TODAY'S RAW(actual) DATA
+    save_today_data(reopen_data)
 
-    MODEL = forecastnet.ForecastLSTM(IN_FEATURES, OUT_FEATURES, N_STEPS, N_LAYERS, HID_DIM)
-    MODEL.load_state_dict(torch.load('mysite/forecast_lstm.pt', map_location=DEVICE))
+    MODEL = forecastnet.ForecastLSTM(IN_FEATURES, OUT_FEATURES, N_STEPS, N_LAYERS, HID_DIMS)
+    MODEL.load_state_dict(torch.load('mysite/forecast_lstm2.pt', map_location=DEVICE))
     MODEL.to(DEVICE)
     MODEL.eval()
 
@@ -228,4 +215,3 @@ def run_app():
 
 if __name__ == "__main__":
     run_app()
-
