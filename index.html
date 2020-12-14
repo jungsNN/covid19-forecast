@@ -1,176 +1,219 @@
+{% extends "base.html" %}
+{% block title %} COVID-19 US Weekly Forecast {% endblock %}
 
-
-
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-   
-    <title>COVID-19 US Weekly Forecast</title>
-    <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <script src="https://kit.fontawesome.com/39641c9f5d.js" crossorigin="anonymous"></script>
-    <style type="text/css">
-        /* NAVBAR & ETC STYLES */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        p {
-            margin: 0;
-        }
-    body {
-            background-color: tan;
-        }
-    .container {
-        width: 800px;
-    }
-    .navbar {
-        background-color: tan;
-    }
-      .jumbotron {
-          background-color: tan;
-          color: black;
-          padding-bottom: 80px;
-          font-family: Andale Mono
-         
-      }
-      .jumbotron .btn-primary {
-          background: #DEB887;
-          border-color: #DEB887;
-      }
-      .jumbotron .btn-primary:hover {
-          background: #DEB887;
-      }
-      .jumbotron p {
-          color: black;
-          max-width: 75%;
-          margin: 1em auto 1em;
-          font-family: Andale Mono;
-      }
-      .navbar+.jumbotron {
-          margin-top: -30px
-      }
-    .jumbotron .logo_icon {
-        display: block;
-        background: tan;
-        border-radius: 50%;
-        overflow: hidden;
-        width: 100px;
-        height: 100px;
-        margin: auto;
-        border: 0px solid white
-    }
-    .jumbotron .logo_icon img {
-        max-width: 100%
-    }
-    .flex {
-        display: flex;
-    }
-    .center {
-        justify-content: center;
-    }
-    .note {
-        margin-right: 1rem;
-    }
-    .description {
-        color: black;
-    }
-
-    </style>
-</head>
-    <!--- NAVBAR HTML --->
+{% block content %}
 <body>
-    <nav class="navbar navbar-default navbar-static-top navbar-inverse">
-      <div class="container">
-        <ul class="nav navbar-nav">
-          <li class="active">
-            <a href="/" role="button"> <img src="https://www.jiae.ai"/>
-            </a>
-          </li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-info-sign"></span> Portfolio <span class="caret"></span></a>
-            <ul class="dropdown-menu" role="menu">
-              <li>One</li>
-              <li>Two</a></li>
-              <li>Three</li>
-                <li><i class="fab fa-facebook-f"></i></li>
-                <li><i class="fab fa-twitter"></i></li>
-            </ul>
-           </li>
-          </ul>
+    <form role="form" action='/' method="POST">
+        <div class="container">
+            <h2 class="flex center">Choose a State</h2><br>
+
+
+        <button class="fipsButton" type="submit" name="fips" value="1">AL</button>
+        <button class="fipsButton" type="submit" name="fips" value="2">AK</button>
+        <button class="fipsButton" type="submit" name="fips" value="4"/>AZ</button>
+        <button class="fipsButton" type="submit" name="fips" value="5"/>AR</button>
+        <button class="fipsButton" type="submit" name="fips" value="6"/>CA</button>
+        <button class="fipsButton" type="submit" name="fips" value="8"/>CO</button>
+        <button class="fipsButton" type="submit" name="fips" value="9"/>CT</button>
+        <button class="fipsButton" type="submit" name="fips" value="10"/>DE</button>
+        <button class="fipsButton" type="submit" name="fips" value="11"/>DC</button>
+        <button class="fipsButton" type="submit" name="fips" value="12"/>FL</button>
+        <button class="fipsButton" type="submit" name="fips" value="13"/>GA</button>
+        <button class="fipsButton" type="submit" name="fips" value="15"/>HI</button>
+        <button class="fipsButton" type="submit" name="fips" value="16"/>ID</button>
+        <button class="fipsButton" type="submit" name="fips" value="17"/>IL</button>
+        <button class="fipsButton" type="submit" name="fips" value="18"/>IN</button>
+        <button class="fipsButton" type="submit" name="fips" value="19"/>IA</button>
+        <button class="fipsButton" type="submit" name="fips" value="20"/>KS</button>
+        <button class="fipsButton" type="submit" name="fips" value="21"/>KY</button>
+        <button class="fipsButton" type="submit" name="fips" value="22"/>LA</button>
+        <button class="fipsButton" type="submit" name="fips" value="23"/>ME</button>
+        <button class="fipsButton" type="submit" name="fips" value="24"/>MD</button>
+        <button class="fipsButton" type="submit" name="fips" value="25"/>MA</button>
+        <button class="fipsButton" type="submit" name="fips" value="26"/>MI</button>
+        <button class="fipsButton" type="submit" name="fips" value="27"/>MN</button>
+        <button class="fipsButton" type="submit" name="fips" value="28"/>MS</button>
+        <button class="fipsButton" type="submit" name="fips" value="29"/>MO</button>
+        <button class="fipsButton" type="submit" name="fips" value="30"/>MT</button>
+        <button class="fipsButton" type="submit" name="fips" value="31"/>NE</button>
+        <button class="fipsButton" type="submit" name="fips" value="32"/>NV</button>
+        <button class="fipsButton" type="submit" name="fips" value="33"/>NH</button>
+        <button class="fipsButton" type="submit" name="fips" value="34"/>NJ</button>
+        <button class="fipsButton" type="submit" name="fips" value="35"/>NM</button>
+        <button class="fipsButton" type="submit" name="fips" value="36"/>NY</button>
+        <button class="fipsButton" type="submit" name="fips" value="37"/>NC</button>
+        <button class="fipsButton" type="submit" name="fips" value="38"/>ND</button>
+        <button class="fipsButton" type="submit" name="fips" value="39"/>OH</button>
+        <button class="fipsButton" type="submit" name="fips" value="40"/>OK</button>
+        <button class="fipsButton" type="submit" name="fips" value="41"/>OR</button>
+        <button class="fipsButton" type="submit" name="fips" value="42"/>PA</button>
+        <button class="fipsButton" type="submit" name="fips" value="44"/>RI</button>
+        <button class="fipsButton" type="submit" name="fips" value="45"/>SC</button>
+        <button class="fipsButton" type="submit" name="fips" value="46"/>SD</button>
+        <button class="fipsButton" type="submit" name="fips" value="47"/>TN</button>
+        <button class="fipsButton" type="submit" name="fips" value="48"/>TX</button>
+        <button class="fipsButton" type="submit" name="fips" value="49"/>UT</button>
+        <button class="fipsButton" type="submit" name="fips" value="50"/>VT</button>
+        <button class="fipsButton" type="submit" name="fips" value="51"/>VA</button>
+        <button class="fipsButton" type="submit" name="fips" value="53"/>WA</button>
+        <button class="fipsButton" type="submit" name="fips" value="54"/>WV</button>
+        <button class="fipsButton" type="submit" name="fips" value="55"/>WI</button>
+        <button class="fipsButton" type="submit" name="fips" value="56"/>WY</button>
         </div>
-    </nav>
-<!--- END OF NAVBAR --->
-<div class="jumbotron text-center">
-  <div class="container">
-    <a href="/" class="lang-logo">
-      <img src="{% static 'lang-logo.png'%}">
-    </a>
-    <h2>COVID-19 US Weekly Forecast</h2>
-    <p>Project Description</p>
-    <a type="button" class="btn btn-lg btn-default" href="https://forecast-webapp.herokuapp.com"><span class="glyphicon glyphicon-flash"></span> COVID19 Forecast App </a>
-    <a type="button" class="btn btn-lg btn-primary" href="https://github.com/jungsnn/covid19-weekly"><span class="glyphicon glyphicon-download"></span> Source on GitHub</a>
-  </div>
-</div>
-<div class="container">
-  <hr>
-  <!-- COLUMN DIVIDE -->
-  <div class="row">
-    <div class="col-md-6">
-        <!-- FORECAST DESCRIPTION -->
-      <h3><span class="glyphicon glyphicon-info-sign"></span> Forecast Results Explained </h3>
-      <ul>
-          <li>
-              <p class="text-left" ><span style="font-size: 14px; font-weight: bold" class="note">Cases:</span><span style='font-size: 13px;'>Predicted total cases for next week in each state</span></p>
-          </li>
-          <li>
-              <p class="text-left" ><span style="font-size: 14px; font-weight: bold" class="note">Deaths:</span><span style='font-size: 13px;'>Predicted total deaths for next week in each state</span></p>
-          </li>
-          <li>
-              <p class="text-left"><span style="font-size: 14px; font-weight: bold" class="note">Total Open:</span><span style='font-size: 13px;'>Predicted number of public settings open for business (i.e. Barbar shop, gym, nail salon, bar, etc.). Each value represents a single entity/business category.</span></p>
-          </li>
-          <li>
-              <p class="text-left" ><span style="font-size: 14px; font-weight: bold" class="note">Status:</span><span style='font-size: 13px;'>Risk rating ranging from `1` (Low risk: "gyms open", "traveling to work", etc.) to `3` (high risk: "state on shut-down", "stay home", "QT-Time").</span></p>
-          </li>
-      </ul>
-      <!-- SOURCE REFERENCE -->
+
+        <!-- later change this to state abbr -->
+        <hr>
+        <h3 class="text-center">Forecasting the week of {{ next_week }}</h3>
+    </form>
+
+
+    <div class="container">
+    <div class="flex center"><br><br>
+        <ul style="list-style-type:none;">
+            <li ><p class='text-left' style="font-size:25px;" > State: {{ state }}</p>
+            <li><p class='text-left' style="font-size:25px;" > Fips: {{ fips }}</p>
+            <li><p class='text-left' style="font-size:25px;" > Cases: {{ cases }}</p>
+            <li><p class='text-left' style="font-size:25px;" > Deaths: {{ deaths }}</p>
+            <li><p class='text-left' style="font-size:25px;" > Total open: {{ total_open }}</p>
+            <li><p class='text-left' style="font-size:25px;" > Status: {{ status }}</p>
+        </ul>
     </div>
-    <div class="col-md-6">
-      <h3><span class="glyphicon glyphicon-link"></span> SOURCE REFERENCES </h3>
-      <ul >
-          <li><h5>New York Times Coronavirus (Covid-19) Data in the United States</h5>
-              <ul style="list-style-type:none;">
-                  <li>
-                      <p class="text-left" style="font-size: 13px">State by state daily updates on confirmed, as well as "probable" cases and deaths. The numbers represent accumulated records of `cases` and `deaths`, which include all those who recovered and passed.</p>
-                  </li>
-              </ul>
-          </li>
-          <li><h5>COVID-19 United States Reopen and Shut Down Status by State | NY Times</h5>
-              <ul style="list-style-type:none;">
-                  <li>
-                      <p class="text-left" style="font-size: 13px">provided by: Rearc (AWS Data Exchange)</p>
-                  </li>
-                  <li>
-                      <p class="text-left" style="font-size: 13px">Daily revision on various categories detailing on closures and reopening status in each state.</p>
-                  </li>
-              </ul>
-          </li>
-      </ul>
-      <h3><span class="glyphicon glyphicon-link"></span> Helpful Links</h3>
-      <ul>
-        <li><a href="https://www.heroku.com/home">Heroku</a></li>
-        <li><a href="https://devcenter.heroku.com/">Heroku Dev Center</a></li>
-        <li><a href="https://devcenter.heroku.com/articles/getting-started-with-python">Getting Started with Python on Heroku</a></li>
-        <li><a href="https://devcenter.heroku.com/articles/django-app-configuration">Configuring Django Apps for Heroku</a></li>
-      </ul>
+    <hr><br>
+    <div class="flex center">
+        <br><br>
+        <p class='text-left' style="font-size: 16px" >
+            One of the things I appreciated when I visited South Korea in Fall of 2019, was that
+            every bus station - actually almost everywhere you - go was a forecast on air quality, along with today's date and current time.
+            S. Korea has been battling air pollution due to microfine dust particles deriving from seasonal gust storms(?)
+            all the way from Mongolian and Chinese Deserts<a href="https://www.bbc.com/news/world-asia-48346344">(bbc.com)</a>.
+            Because of its high toxicity, "fine dust" forecast is now part of their daily reminder.<br><br>
+
+            Prediction models are not just for statistical analyses, I'd say; and therefore this app was created for the purpose
+            of acknowledgment of making tools that are applicable for everyone, everyday.
+        </p>
     </div>
-  </div> <!-- row -->
-   <div class="alert alert-info text-center" role="alert">
-    Please do work through the Getting Started guide, even if you do know how to build such an application.  The guide covers the basics of working with Heroku, and will familiarize you with all the concepts you need in order to build and deploy your own apps.
-  </div>
+    <div class='flex center'>
+        <h3 class="text-center">
+            Data and Results Explained
+        </h3>
+    </div>
+    <br>
+    <div><!-- DATA SOURCES -->
+        <h4 class="text-left">Data Sources</h4>
+        <ul >
+            <li><h5>New York Times Coronavirus (Covid-19) Data in the United States</h5>
+                <ul style="list-style-type:none;">
+                    <li>
+                        <p class="text-left" style="font-size: 13px">State by state daily updates on confirmed, as well as "probable" cases and deaths. The numbers represent accumulated records of `cases` and `deaths`, which include all those who recovered and passed.</p>
+                    </li>
+                </ul>
+            </li>
+            <li><h5>COVID-19 United States Reopen and Shut Down Status by State | NY Times</h5>
+                <ul style="list-style-type:none;">
+                    <li>
+                        <p class="text-left" style="font-size: 13px">provided by: Rearc (AWS Data Exchange)</p>
+                    </li>
+                    <li>
+                        <p class="text-left" style="font-size: 13px">Daily revision on various categories detailing on closures and reopening status in each state.</p>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <hr><br>
+        <h4 class="text-left">Dataset</h4>
+        <p class='text-left'  style="font-size: 15px">
+            Using the two datasets above, the input data was engineered (i.e. converting 'reopened' string elements into value counts), though not deviated to be biased.
+            Assessment via Principle Composition Analysis(PCA) and polynomial regression indicated that complex feature manipulations
+            were not necessary, such that RMSE scores were not significantly different from the original regression measures.
+
+        </p>
+        <div class="flex center">
+            <img src="static/pac_variance.jpg" height=200 width=580>
+        </div>
+            <p class='text-center' style='font-size: 14px'>
+                "Above tells us that the first 9 components explain about 98% of variance in the data.<br>
+                Considering that, we can try computing the RMSE again using just the 9 features."
+            </p>
+            <br>
+        <div class="flex center">
+            <img src="static/rmse_pca.png" height=116 width=580>
+        </div>
+        <p class='text-left' style="font-size: 15px">
+            The full EDA can be viewed in the GitHub repo, within the `EDA` directory (to be uploaded with all my codes tomorrow!). The screenshot is a view of the PCA and results from
+            attempting to amalgamate some features that I've generated using polynomial degree morphing (details of this can be sought in the EDA notebook).
+        </p><br>
+        <p class='text-left'  style="font-size: 15px">
+
+            Concluding from this extraneous work, I ended up with just a simple dataset that seemed to work way better for my LSTM model.
+        </p>
+
+        <br><!-- FORECAST DESCRIPTION -->
+        <h4 class="text-left">Forecast Description</h4>
+        <ul>
+            <li>
+                <p class="text-left" ><span style="font-size: 15px; font-weight: bold" class="note">Cases:</span><span style='font-size: 15px;'>Predicted total cases for next week in each state</span></p>
+            </li>
+            <li>
+                <p class="text-left" ><span style="font-size: 15px; font-weight: bold" class="note">Deaths:</span><span style='font-size: 15px;'>Predicted total deaths for next week in each state</span></p>
+            </li>
+            <li>
+                <p class="text-left"><span style="font-size: 15px; font-weight: bold" class="note">Total Open:</span><span style='font-size: 15px;'>Predicted number of public settings open for business (i.e. Barbar shop, gym, nail salon, bar, etc.). Each value represents a single entity/business category.</span></p>
+            </li>
+            <li>
+                <p class="text-left" ><span style="font-size: 15px; font-weight: bold" class="note">Status:</span><span style='font-size: 15px;'>Risk rating ranging from `1` (Low risk: "gyms open", "traveling to work", etc.) to `3` (high risk: "state on shut-down", "stay home", "QT-Time").</span></p>
+            </li>
+
+        </ul>
+        <br>
+        <h4 class="text-left">ForecastNet Model</h4>
+        <ul>
+            <li>
+                <p class="text-left" style="font-size: 16px">
+                    The model, ForecastNet, is an LSTM Pytorch module.
+                </p>
+            </li>
+            <li>
+                <p class="text-left" style="font-size: 16px">
+                    There are 58 input features in 7 sequences (time steps) per record (row), total of 406 columns. (May sound like a lot, but most of them are dummy values for fips and status.)
+                    </p>
+            </li>
+            <li>
+                <p class="text-left" style="font-size: 16px">
+                    The output dimension is 6, which composes of columns: `cases`, `deaths`, `total_open`, `status_1`, `status_2` and `status_3` where
+                    the latter three are dummy variables for three different status values.
+                    </p>
+            </li>
+            </ul>
+                <br>
+                <br>
+                    <p class="text-left" style="font-size: 16px">
+                        The network was pretty straightforward in architecture:
+                    </p>
+                    <br>
+                        <p style="font-weight:bold; font-size:14px">
+                            Inputs -> 2 contiguously stacked layers from LSTM -> 1 dense output layer with no activation function(identity)
+                        </p>
+                    <br>
+        <h4 class="text-left">Metrics</h4>
+            <p class="text-left" style="font-size: 16px">
+                Dealing with all continuous values, mean squared loss seemed to be a good fit for measuring how far off results were from ground truth.<br>
+            </p>
+                    <br>
+
+        <h4 class="text-left">Conclusion</h4>
+            <p class="text-left" style="font-size: 16px">
+                My coding motto is the Occam's Razor principle: "Perfection must be simple".<br>
+                an LSTM, yet a simple one such as this, seemed to produce a rather surprisingly low losses.<br>
+            </p>
+                <br>
+                <br>
+                <br>
+                <hr>
+
+        </div>
+    </div>
 </div>
-</html>
+</body>
+
+{% endblock %}
+
