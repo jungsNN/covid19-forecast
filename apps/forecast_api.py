@@ -1,4 +1,3 @@
-#!/home/jungsnn1029/.virtualenvs/myvirtualenv/bin/python
 import pandas as pd
 import csv
 import numpy as np
@@ -8,6 +7,7 @@ import os
 import torch
 
 import forecastnet
+from data_utils import *
 import config
 
 path = os.getcwd()
@@ -28,49 +28,13 @@ OUT_FEATURES = 6
 N_STEPS = 7
 N_LAYERS = 2
 HID_DIMS = [1024, 784]
-
 DEVICE = torch.device('cpu')
 
-def load_csv(filepath):
-    data_rows = []
-    with open(filepath, 'r') as csvfile:
-        csvreader = csv.reader(csvfile)
-        for lines in csvreader:
-            data_rows.append(lines)
-    data = pd.DataFrame(data_rows[1:], columns=data_rows[0])
-    return data
-
-
-def normalize(data):
-    data_ = data.copy()
-    for var in data_.columns:
-        max_val = data[var].max()
-        data_.loc[:, var] = data[var] / max_val
-        np.save(os.path.join(SERVE_DIR, 'max_{}.npy'.format(var)), max_val)
-
-    return data_
-
-
-def mask_status(data, column, mask_dict):
-    mask = 1
-    masked = data[column].apply(lambda x: mask if x in mask_dict[mask]
-    else (mask + 1 if x in mask_dict[mask + 1]
-          else mask + 2))
-
-    return masked
-
-
-def extract_cols(data, extract_str):
-    return data[[col for col in data.columns if extract_str in col]]
-
-
-def count_string_values(data, exclude_parser=';', val_len=3):
-    exp = exclude_parser
-    return data.applymap(lambda x: len(','.join(str(x).lower().split(exp))
-                                       .split(',')) if len(str(x)) > val_len else 0)
-
-
 def preprocess_x(data):
+    """
+    Returns a preprocessed 'x' data, which is retrieved from NYT Covid-19 Github repository.
+    It includes important information, such as 'cases' and 'deaths' for each day.
+    """
     x = data.query("state in @LAST_DATA.state").sort_values(by=['state', 'date']).set_index('date')
     fips_dummy = pd.get_dummies(x['fips'], prefix='fips')
     scaled = normalize(x[['cases', 'deaths']])
@@ -79,6 +43,11 @@ def preprocess_x(data):
 
 
 def preprocess_y(data):
+    """
+    Returns a preprocessed NYT Reopen/Closed dataset from AWS dataexchange.
+    The data is referred to as 'y', because of the main target 'status' column is
+    included in the data.
+    """
     y = data.query("state in @LAST_DATA.state").sort_values(by='state')
     y = y.reset_index(drop=True)
     embed = np.zeros((len(y), 3), dtype=int)
@@ -97,6 +66,9 @@ def preprocess_y(data):
 
 
 def get_inputs(reopen_data):
+    """
+    Takes raw x and y data and prepares them as input data to the LSTM model.
+    """
     x = pd.read_csv(RAW_URL, error_bad_lines=False)
     past_week = sorted(x.date.unique())[-7:]
     x = x.query("date in @past_week")
@@ -111,7 +83,7 @@ def get_inputs(reopen_data):
 
 def get_raw_forecast(inputs, model):
     """
-    returns arrays
+    Takes in preprocessed input data and returns raw output from the LSTM model
     """
     model.float()
     h = model.init_hidden(len(inputs))
@@ -120,16 +92,9 @@ def get_raw_forecast(inputs, model):
     return output
 
 
-def serialize_dummy(arr):
-    out_list = []
-    for row in arr:
-        out_list.extend([int(i + 1) for i in range(len(row)) if row[i] == row.max(0)])
-    return np.array(out_list)
-
-
 def serialize_forecast(raw_outputs):
     """
-    max values in the order of ['cases', 'deaths', 'total_open']
+    Returns a translated data from raw, by inversing scaled values and dummy values.
     """
 
     max_vals = [np.load(os.path.join(SERVE_DIR, 'max_cases.npy')),
@@ -146,6 +111,10 @@ def serialize_forecast(raw_outputs):
 
 
 def save_forecast(data):
+    """
+    Specific for the NYT dataset, the function saves the output from the LSTM model
+    as a csv file for retrieval.
+    """
     fips_state_cols = LAST_DATA[['state', 'fips']].sort_values(by='state').reset_index(drop=True)
     rows = pd.concat([fips_state_cols, data], axis=1).values
     filename = 'forecast_{}.csv'.format(datetime.date.today().strftime("%Y%m%d"))
@@ -154,7 +123,10 @@ def save_forecast(data):
         csvwriter.writerow(['state', 'fips', 'cases', 'deaths', 'total_open', 'status'])
         csvwriter.writerows(rows)
 
-def save_today_data(y):
+def save_today_data(x, y):
+    """
+    Saves actual data retrieved from sources.
+    """
     # rearc NYT reopen data
     today_y = y.query("state in @LAST_DATA.state")
     today_status = today_y.iloc[:, -3:]
@@ -163,7 +135,7 @@ def save_today_data(y):
     today_y = today_y.sort_values(by='state')[['total_open', 'status']]
 
    # raw daily data
-    today_x = pd.read_csv(RAW_URL, error_bad_lines=False).query("state in @LAST_DATA.state")
+    today_x = pd.read_csv(x, error_bad_lines=False).query("state in @LAST_DATA.state")
     most_recent_date = sorted(today_x.date.unique())[-1]
     most_recent_date
     today_x = today_x.loc[today_x.date == most_recent_date]
@@ -179,7 +151,10 @@ def save_today_data(y):
         csvwriter.writerows(today_data.values)
 
 def run_app():
-
+    """
+    Processes all steps to converting and merging datasets, and runs it through the LSTM model.
+    Serialized outputs and real data are saved.
+    """
     nyt_reopen_filepath = os.path.join(SERVE_DIR, 'nyt_reopen_{}.csv'.format( datetime.date.today().strftime("%Y%m%d")))
     s3 = boto3.resource('s3', aws_access_key_id=config.SECRET_KEY,
                         aws_secret_access_key=config.ACCESS_KEY,
@@ -188,7 +163,7 @@ def run_app():
     week_inputs = get_inputs(pd.read_csv(nyt_reopen_filepath))
     reopen_data = pd.read_csv(nyt_reopen_filepath)
     # SAVING TODAY'S RAW(actual) DATA
-    save_today_data(reopen_data)
+    save_today_data(RAW_URL, reopen_data)
 
     MODEL = forecastnet.ForecastLSTM(IN_FEATURES, OUT_FEATURES, N_STEPS, N_LAYERS, HID_DIMS)
     MODEL.load_state_dict(torch.load('mysite/forecast_lstm2.pt', map_location=DEVICE))
@@ -196,22 +171,3 @@ def run_app():
     MODEL.eval()
 
     save_forecast(serialize_forecast(get_raw_forecast(week_inputs, MODEL)))
-
-# def test_model():
-#     nyt_reopen_filepath = os.path.join(SERVE_DIR, 'nyt_reopen_{}.csv'.format( datetime.date.today().strftime("%Y%m%d")))
-#     s3 = boto3.resource('s3', aws_access_key_id=config.SECRET_KEY,
-#                         aws_secret_access_key=config.ACCESS_KEY,
-#                         region_name='us-east-1')
-#     s3.Bucket(PUBLIC_BUCKET_NAME).download_file(PUBLIC_PREFIX, nyt_reopen_filepath)
-#     reopen_data = pd.read_csv(nyt_reopen_filepath)
-#     inputs = get_inputs(RAW_URL, reopen_data)
-#     MODEL = forecastnet.ForecastNet(INP_DIM, OUT_DIM, HID_DIMS)
-#     MODEL.load_state_dict(torch.load('mysite/forecastnet.pt', map_location=DEVICE))
-#     MODEL.to(torch.device('cpu'))
-#     MODEL.eval()
-
-#     save_forecast(serialize_forecast(get_raw_forecast(inputs, MODEL)))
-
-
-if __name__ == "__main__":
-    run_app()
