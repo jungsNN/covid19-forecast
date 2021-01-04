@@ -32,10 +32,10 @@ class ForecastLSTM(nn.Module):
     def init_hidden(self, batch_size):
         weight = next(self.parameters()).data
 
-#         if torch.cuda.is_available():
-#             hidden = (weight.new(self.n_layers, batch_size, self.hid_dim).zero_().cuda(),
-#                       weight.new(self.n_layers, batch_size, self.hid_dim).zero_().cuda())
-#         else:
-        hidden = (weight.new(self.n_layers, batch_size, self.hid_dims[0]).zero_().cpu(),
-                  weight.new(self.n_layers, batch_size, self.hid_dims[0]).zero_().cpu())
+        if torch.cuda.is_available():
+            hidden = (weight.new(self.n_layers, batch_size, self.hid_dim).zero_().cuda(),
+                    weight.new(self.n_layers, batch_size, self.hid_dim).zero_().cuda())
+        else:
+            hidden = (weight.new(self.n_layers, batch_size, self.hid_dims[0]).zero_(),
+                    weight.new(self.n_layers, batch_size, self.hid_dims[0]).zero_())
         return hidden
