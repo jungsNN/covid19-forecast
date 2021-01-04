@@ -9,26 +9,7 @@ import torch
 import forecastnet
 from data_utils import *
 import config
-
-path = os.getcwd()
-SERVE_DIR = os.path.join(path, 'mysite/serve/')
-# AWS S3
-PUBLIC_BUCKET_NAME = 'sagemaker-us-east-1-476204846640'
-PUBLIC_PREFIX = 'nyt-states-reopen-status-covid-19/dataset/nyt-states-reopen-status-covid-19.csv'
-# New York Times Daily Github Raw Data
-RAW_URL = 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv'
-CSV = [f for f in os.listdir('mysite/train/') if f.endswith('.csv') and f.startswith('forecast_')][0]
-LAST_DATA = pd.read_csv('mysite/train/'+CSV)
-STATUS_DICT = {1: ['reopened', 'forward', 'all'],
-               2: ['reopening', 'pausing', 'regional', 'soon'],
-               3: ['reversing', 'shutdown-restricted']}
-''' -------- MODEL -------- '''
-IN_FEATURES = 58
-OUT_FEATURES = 6
-N_STEPS = 7
-N_LAYERS = 2
-HID_DIMS = [1024, 784]
-DEVICE = torch.device('cpu')
+# NOTE: THESE METHODS ARE HIGHLY PERTAINED TO NEW YORK TIMES DATASETS
 
 def preprocess_x(data):
     """
@@ -42,7 +23,7 @@ def preprocess_x(data):
     return x
 
 
-def preprocess_y(data):
+def preprocess_reopen(data):
     """
     Returns a preprocessed NYT Reopen/Closed dataset from AWS dataexchange.
     The data is referred to as 'y', because of the main target 'status' column is
@@ -73,7 +54,7 @@ def get_inputs(reopen_data):
     past_week = sorted(x.date.unique())[-7:]
     x = x.query("date in @past_week")
 
-    input_data = preprocess_x(x).reset_index().merge(preprocess_y(reopen_data), how='left', on='state')
+    input_data = preprocess_x(x).reset_index().merge(preprocess_reopen(reopen_data), how='left', on='state')
     daily = []
     for date in sorted(input_data.date.unique()):
         daily.append(input_data.loc[input_data.date == date].drop(['date', 'state'], axis=1).reset_index(drop=True))
@@ -155,19 +136,42 @@ def run_app():
     Processes all steps to converting and merging datasets, and runs it through the LSTM model.
     Serialized outputs and real data are saved.
     """
-    nyt_reopen_filepath = os.path.join(SERVE_DIR, 'nyt_reopen_{}.csv'.format( datetime.date.today().strftime("%Y%m%d")))
+    # -------- PREPROCESSING -------- #
+    nyt_reopen_filepath = os.path.join(SERVE_DIR,
+    'nyt_reopen_{}.csv'
+    .format( datetime.date.today().strftime("%Y%m%d")))
     s3 = boto3.resource('s3', aws_access_key_id=config.SECRET_KEY,
                         aws_secret_access_key=config.ACCESS_KEY,
-                        region_name='us-east-1')
-    s3.Bucket(PUBLIC_BUCKET_NAME).download_file(PUBLIC_PREFIX, nyt_reopen_filepath)
+                        region_name=config.REGION_NAME)
+    s3.Bucket(config.BUCKET_NAME).download_file(config.PREFIX, nyt_reopen_filepath)
     week_inputs = get_inputs(pd.read_csv(nyt_reopen_filepath))
     reopen_data = pd.read_csv(nyt_reopen_filepath)
-    # SAVING TODAY'S RAW(actual) DATA
-    save_today_data(RAW_URL, reopen_data)
+    
+    save_today_data(RAW_URL, reopen_data)  # saving today's actual data
+    # -------- MODEL OUTPUT -------- #
+    device = torch.device('cpu')
+    model = forecastnet.ForecastLSTM(IN_FEATURES, OUT_FEATURES, N_STEPS, N_LAYERS, HID_DIMS)
+    model.load_state_dict(torch.load(MODEL_PT, map_location=device))
+    model.to(device)
+    model.eval()
 
-    MODEL = forecastnet.ForecastLSTM(IN_FEATURES, OUT_FEATURES, N_STEPS, N_LAYERS, HID_DIMS)
-    MODEL.load_state_dict(torch.load('mysite/forecast_lstm2.pt', map_location=DEVICE))
-    MODEL.to(DEVICE)
-    MODEL.eval()
+    save_forecast(serialize_forecast(get_raw_forecast(week_inputs, model)))
 
-    save_forecast(serialize_forecast(get_raw_forecast(week_inputs, MODEL)))
+
+################################ PARAMS ###############
+path = os.getcwd()
+SERVE_DIR = os.path.join(path, 'apps/serve/')
+RAW_URL = 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv'
+CSV = [f for f in os.listdir('apps/train/') if f.endswith('.csv') and f.startswith('forecast_')][0]
+LAST_DATA = pd.read_csv('apps/train/'+CSV)
+STATUS_DICT = {1: ['reopened', 'forward', 'all'],
+               2: ['reopening', 'pausing', 'regional', 'soon'],
+               3: ['reversing', 'shutdown-restricted']}
+               
+IN_FEATURES = 58
+OUT_FEATURES = 6
+N_STEPS = 7
+N_LAYERS = 2
+HID_DIMS = 1024
+MODEL_PT = os.path.join(path, 'apps/forecast_lstm20210101.pt')
+########################################################
