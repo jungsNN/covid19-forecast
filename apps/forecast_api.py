@@ -68,9 +68,9 @@ def get_raw_forecast(inputs, model):
     """
     model.float()
     h = model.init_hidden(len(inputs))
-    output, _ = model(torch.from_numpy(inputs).float().to(DEVICE), h)
-    output = output.detach().numpy()
-    return output
+    output, _ = model(torch.from_numpy(inputs).float().detach().cpu(), h)
+
+    return np.numpy(output)
 
 
 def serialize_forecast(raw_outputs):
@@ -173,5 +173,5 @@ OUT_FEATURES = 6
 N_STEPS = 7
 N_LAYERS = 2
 HID_DIMS = 1024
-MODEL_PT = os.path.join(path, 'apps/forecast_lstm20210101.pt')
+MODEL_PT = os.path.join(path, 'apps/forecast_lstm.pt')
 ########################################################
