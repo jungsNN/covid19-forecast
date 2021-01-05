@@ -67,7 +67,7 @@ def get_raw_forecast(inputs, model):
     Takes in preprocessed input data and returns raw output from the LSTM model
     """
     model.float()
-    h = model.init_hidden(len(inputs))
+    h = model.init_hidden()
     output, _ = model(torch.from_numpy(inputs).float().detach().cpu(), h)
 
     return np.numpy(output)
@@ -150,7 +150,7 @@ def run_app():
     save_today_data(RAW_URL, reopen_data)  # saving today's actual data
     # -------- MODEL OUTPUT -------- #
     device = torch.device('cpu')
-    model = forecastnet.ForecastLSTM(IN_FEATURES, OUT_FEATURES, N_STEPS, N_LAYERS, HID_DIMS)
+    model = forecastnet.ForecastLSTM(IN_FEATURES, OUT_FEATURES, N_LAYERS, HID_DIM, BATCH_SIZE)
     model.load_state_dict(torch.load(MODEL_PT, map_location=device))
     model.to(device)
     model.eval()
@@ -170,8 +170,8 @@ STATUS_DICT = {1: ['reopened', 'forward', 'all'],
                
 IN_FEATURES = 58
 OUT_FEATURES = 6
-N_STEPS = 7
 N_LAYERS = 2
-HID_DIMS = 1024
+HID_DIM = 1024
+BATCH_SIZE = 51  # number of states
 MODEL_PT = os.path.join(path, 'apps/forecast_lstm.pt')
 ########################################################
